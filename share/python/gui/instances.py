@@ -297,9 +297,9 @@ class Sequence(object):
                 element.tag = 'ConcatSequence'
         # Throw away hidden attributes
         # TODO: Should they be editable at all?
-            for key in element.keys():
-                if key.find('HIDDEN') is not -1:
-                    del (element.attrib[key])
+            hidden_elements = {k: v for k, v in element.items() if k.find('HIDDEN') is not -1}
+            for key in hidden_elements.keys():
+                del (element.attrib[key])
 
         writeXML('%s.xml' % self.fname, self.xml.get())
 
