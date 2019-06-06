@@ -931,7 +931,6 @@ class QTreeWidget(CoreQTreeWidget):
         self.setCurrentItem(prep)
         idx += [prep.childCount()]
         self.dragSource.sendInsertSignal()
-        print(type(idx), type(dropIndex))
         self.itemMoved.emit(idx, dropIndex)
 #        self.emit(QtCore.SIGNAL('itemMoved'), idx, dropIndex)
 
@@ -1274,7 +1273,8 @@ class QToolBar(QtWidgets.QToolBar):
             if key is 'SEPARATOR':
                 self.addSeparator()
             else:
-                button = QButton(QtGui.QIcon(icons[key]), key, slot)
+                draggable = key not in ['OPEN', 'NEW', 'SAVE', 'SAVEAS']
+                button = QButton(QtGui.QIcon(icons[key]), key, slot, draggable)
                 self.addWidget(button)
 
 
@@ -1282,7 +1282,7 @@ class QButton(QtWidgets.QPushButton):
 
     itemInsert = QtCore.pyqtSignal()
     
-    def __init__(self, icon, string, slot, parent=None):
+    def __init__(self, icon, string, slot, draggable=True, parent=None):
 
         super(QButton, self).__init__(icon, string, parent)
         self.itemInsert.connect(slot)
@@ -1292,12 +1292,13 @@ class QButton(QtWidgets.QPushButton):
         self.textinfo = string
         self.setMaximumWidth(50)
         self.setToolTip('Add <b>%s</b>' % string)
+        self.draggable = draggable
 
     def text(self):
         return self.textinfo
 
     def mouseMoveEvent(self, e):
-        if e.buttons() != QtCore.Qt.LeftButton:
+        if not self.draggable or e.buttons() != QtCore.Qt.LeftButton:
             return
 
         super(QButton, self).mouseReleaseEvent(e)
