@@ -224,7 +224,7 @@ class JEMRIS_super(QtWidgets.QMainWindow):
         if tag is 'OPEN':
             self.openInstance()
         elif tag is 'NEW':
-            self.newInsance()
+            self.newInstance()
         elif tag is 'SAVE':
             self.saveInstance()
         elif tag is 'SAVEAS':
