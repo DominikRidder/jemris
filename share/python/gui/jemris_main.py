@@ -125,8 +125,9 @@ class JEMRIS(QtWidgets.QMainWindow, JMainForm):
     def connectToJEMRIS(self):
 
         p = self.preferences
+        validSettings = p.checkWorkspace() and p.checkJpath()
 
-        if p.checkWorkspace() and p.checkJpath():
+        if validSettings:
 
             self.caller.connect()
 
@@ -137,10 +138,11 @@ class JEMRIS(QtWidgets.QMainWindow, JMainForm):
 
             self.JEMRIS_seq_super.getAttrib()
             self.JEMRIS_arr_super.getAttrib()
-
         else:
-            self.menuBar().actions()[0].setEnabled(False)
             p.show()
+            
+        for tab in self.tabs:
+            tab.toolBarActionActive = validSettings
 
 
 class JEMRIS_super(QtWidgets.QMainWindow):
@@ -167,10 +169,11 @@ class JEMRIS_super(QtWidgets.QMainWindow):
         self.saveAsTag = QtWidgets.QAction('Save %s as' % tag, self)
         self.saveAsTag.triggered.connect(self.saveInstanceAs)
 
-        self.filemenu.addAction(self.openTag)
-        self.filemenu.addAction(self.newTag)
-        self.filemenu.addAction(self.saveTag)
-        self.filemenu.addAction(self.saveAsTag)
+        #self.filemenu.addAction(self.openTag)
+        #self.filemenu.addAction(self.newTag)
+        #self.filemenu.addAction(self.saveTag)
+        #self.filemenu.addAction(self.saveAsTag)
+        self.toolBarActionActive = False
 
         """ CENTRAL WIDGET """
 
@@ -219,6 +222,9 @@ class JEMRIS_super(QtWidgets.QMainWindow):
             self.tabWidget.setTabText(self.tabWidget.currentIndex(), fname)
 
     def toolBarAction(self):
+        if not self.toolBarActionActive:
+            return
+        
         tag = str(self.sender().text())
         
         if tag is 'OPEN':
@@ -300,9 +306,8 @@ class JEMRIS_arr_super(JEMRIS_super):
         self.addToolBar(QToolBar(self.icons, order, self.toolBarAction))
 
     def getAttrib(self):
-
         self.attrib = parseXML(self.jemris_caller.loadmod())
-        
+
     def treeItemInsert(self):
         if self.tabWidget.currentIndex() is not None:
             self.Instances[self.tabWidget.currentIndex()].treeItemInsert()
