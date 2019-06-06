@@ -254,7 +254,7 @@ class JEMRIS_seq_super(JEMRIS_super):
         super(JEMRIS_seq_super, self).__init__(module, 'Sequence', parent)
 
         order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS', 'SEPARATOR',
-                'CONCATSEQUENCE',      'ATOMICSEQUENCE',
+                 'CONCATSEQUENCE',      'ATOMICSEQUENCE',
                  'DELAYATOMICSEQUENCE', 'EMPTYPULSE', 'SEPARATOR',
                  'ANALYTICGRADPULSE',   'CONSTANTGRADPULSE',
                  'EXTERNALGRADPULSE',   'SPIRALGRADPULSE',
@@ -374,11 +374,10 @@ class JEMRIS_sub(QtWidgets.QMainWindow):
     def saveInstanceAs(self):
 
         _save = QtWidgets.QFileDialog.getSaveFileName
-        fname = str(_save(self, self.module['saveAs'],
-                          self.module['path'], ('*.%s' % self.module['ext'])))
+        fname, filt = _save(self, self.module['saveAs'],
+                          self.module['path'], ('*.%s' % self.module['ext']))
 
         if fname is not '':
-
             self.Instance.rename(fname)
             self.Instance.save()
             return self.Instance.FileName
