@@ -606,6 +606,9 @@ class QTreeWidget(CoreQTreeWidget):
             tag = self.dragSource.text()
             idx = dropIndex[0:-1]
 
+            if len(idx) is 0:
+                return False
+
             tmp = copy.deepcopy(self.xml)
             msg = tmp._insert(idx, tag)
             if msg is not None:
