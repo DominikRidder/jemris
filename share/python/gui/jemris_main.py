@@ -76,9 +76,9 @@ class JEMRIS(QtWidgets.QMainWindow, JMainForm):
         icons = ModuleIcons()
 
         self.JEMRIS_seq_super = JEMRIS_seq_super(self.caller, icons)
-        self.JEMRIS_pha_super = JEMRIS_pha_super(self.caller)
+        self.JEMRIS_pha_super = JEMRIS_pha_super(self.caller, icons)
         self.JEMRIS_arr_super = JEMRIS_arr_super(self.caller, icons)
-        self.JEMRIS_sim_super = JEMRIS_sim_super(self.caller)
+        self.JEMRIS_sim_super = JEMRIS_sim_super(self.caller, icons)
 
         self.tabs = [self.JEMRIS_seq_super,
                      self.JEMRIS_pha_super,
@@ -101,8 +101,8 @@ class JEMRIS(QtWidgets.QMainWindow, JMainForm):
 
         for tab in self.tabs:
             tab.menuBar().setHidden(True)
-            for action in tab.menuBar().actions():
-                self.menuBar().addAction(action)
+        #    for action in tab.menuBar().actions():
+        #        self.menuBar().addAction(action)
 
         for action in tmpBar.actions():
             self.menuBar().addAction(action)
@@ -113,12 +113,14 @@ class JEMRIS(QtWidgets.QMainWindow, JMainForm):
         self.connectToJEMRIS()
 
     def updateMenu(self):
-
-        for idx, action in enumerate(self.menuBar().actions()):
-            if idx == self.tabWidget.currentIndex():
-                action.setVisible(True)
-            elif idx in range(len(self.tabs)):
-                action.setVisible(False)
+       # Obsolete
+        
+       #for idx, action in enumerate(self.menuBar().actions()):
+       #     if idx == self.tabWidget.currentIndex():
+       #         action.setVisible(True)
+       #     elif idx in range(len(self.tabs)):
+       #         action.setVisible(False)
+       pass
 
     def connectToJEMRIS(self):
 
@@ -216,6 +218,22 @@ class JEMRIS_super(QtWidgets.QMainWindow):
         if fname is not None:
             self.tabWidget.setTabText(self.tabWidget.currentIndex(), fname)
 
+    def toolBarAction(self):
+        tag = str(self.sender().text())
+        
+        if tag is 'OPEN':
+            self.openInstance()
+        elif tag is 'NEW':
+            self.newInsance()
+        elif tag is 'SAVE':
+            self.saveInstance()
+        elif tag is 'SAVEAS':
+            self.saveInstanceAs()
+        else:
+            self.treeItemInsert()
+            
+    def treeItemInsert():
+        pass
 
 class JEMRIS_seq_super(JEMRIS_super):
 
@@ -229,7 +247,8 @@ class JEMRIS_seq_super(JEMRIS_super):
 
         super(JEMRIS_seq_super, self).__init__(module, 'Sequence', parent)
 
-        order = ['CONCATSEQUENCE',      'ATOMICSEQUENCE',
+        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS',
+                'CONCATSEQUENCE',      'ATOMICSEQUENCE',
                  'DELAYATOMICSEQUENCE', 'EMPTYPULSE',
                  'ANALYTICGRADPULSE',   'CONSTANTGRADPULSE',
                  'EXTERNALGRADPULSE',   'SPIRALGRADPULSE',
@@ -238,10 +257,9 @@ class JEMRIS_seq_super(JEMRIS_super):
                  'GAUSSIANRFPULSE',     'HARDRFPULSE',
                  'SECHRFPULSE',         'SINCRFPULSE']
 
-        self.addToolBar(QToolBar(self.icons, order, self.treeItemInsert))
+        self.addToolBar(QToolBar(self.icons, order, self.toolBarAction))
 
     def getAttrib(self):
-
         self.attrib = parseXML(self.jemris_caller.loadmod())
 
     def treeItemInsert(self):
@@ -251,13 +269,18 @@ class JEMRIS_seq_super(JEMRIS_super):
 
 class JEMRIS_pha_super(JEMRIS_super):
 
-    def __init__(self, jemris_caller, parent=None):
+    def __init__(self, jemris_caller, icons, parent=None):
 
+        self.icons = icons
+        
         def module():
             return JEMRIS_pha_sub()
 
         super(JEMRIS_pha_super, self).__init__(module, 'Phantom', parent)
-
+        
+        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS']
+            
+        self.addToolBar(QToolBar(self.icons, order, self.toolBarAction))
 
 class JEMRIS_arr_super(JEMRIS_super):
 
@@ -271,14 +294,15 @@ class JEMRIS_arr_super(JEMRIS_super):
 
         super(JEMRIS_arr_super, self).__init__(module, 'Array', parent)
 
-        order = ['BIOTSAVARTLOOP', 'ANALYTICCOIL', 'EXTERNALCOIL']
+        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS',
+                 'BIOTSAVARTLOOP', 'ANALYTICCOIL', 'EXTERNALCOIL']
 
-        self.addToolBar(QToolBar(self.icons, order, self.treeItemInsert))
+        self.addToolBar(QToolBar(self.icons, order, self.toolBarAction))
 
     def getAttrib(self):
 
         self.attrib = parseXML(self.jemris_caller.loadmod())
-
+        
     def treeItemInsert(self):
         if self.tabWidget.currentIndex() is not None:
             self.Instances[self.tabWidget.currentIndex()].treeItemInsert()
@@ -286,16 +310,20 @@ class JEMRIS_arr_super(JEMRIS_super):
 
 class JEMRIS_sim_super(JEMRIS_super):
 
-    def __init__(self, jemris_caller, parent=None):
+    def __init__(self, jemris_caller, icons, parent=None):
 
         self.jemris_caller = jemris_caller
+        self.icons = icons
 
         def module():
             return JEMRIS_sim_sub(self.jemris_caller)
 
         super(JEMRIS_sim_super, self).__init__(module, 'Simulation', parent)
 
-
+        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS']
+            
+        self.addToolBar(QToolBar(self.icons, order, self.toolBarAction))
+ 
 class JEMRIS_sub(QtWidgets.QMainWindow):
 
     def __init__(self, module, parent=None):
