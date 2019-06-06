@@ -253,9 +253,9 @@ class JEMRIS_seq_super(JEMRIS_super):
 
         super(JEMRIS_seq_super, self).__init__(module, 'Sequence', parent)
 
-        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS',
+        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS', 'SEPARATOR',
                 'CONCATSEQUENCE',      'ATOMICSEQUENCE',
-                 'DELAYATOMICSEQUENCE', 'EMPTYPULSE',
+                 'DELAYATOMICSEQUENCE', 'EMPTYPULSE', 'SEPARATOR',
                  'ANALYTICGRADPULSE',   'CONSTANTGRADPULSE',
                  'EXTERNALGRADPULSE',   'SPIRALGRADPULSE',
                  'TRAPGRADPULSE',       'TRIANGLEGRADPULSE',
@@ -284,7 +284,7 @@ class JEMRIS_pha_super(JEMRIS_super):
 
         super(JEMRIS_pha_super, self).__init__(module, 'Phantom', parent)
         
-        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS']
+        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS', 'SEPARATOR']
             
         self.addToolBar(QToolBar(self.icons, order, self.toolBarAction))
 
@@ -300,7 +300,7 @@ class JEMRIS_arr_super(JEMRIS_super):
 
         super(JEMRIS_arr_super, self).__init__(module, 'Array', parent)
 
-        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS',
+        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS', 'SEPARATOR',
                  'BIOTSAVARTLOOP', 'ANALYTICCOIL', 'EXTERNALCOIL']
 
         self.addToolBar(QToolBar(self.icons, order, self.toolBarAction))
@@ -325,7 +325,7 @@ class JEMRIS_sim_super(JEMRIS_super):
 
         super(JEMRIS_sim_super, self).__init__(module, 'Simulation', parent)
 
-        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS']
+        order = ['OPEN', 'NEW', 'SAVE', 'SAVEAS', 'SEPARATOR']
             
         self.addToolBar(QToolBar(self.icons, order, self.toolBarAction))
  

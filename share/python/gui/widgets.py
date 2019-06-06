@@ -1271,10 +1271,11 @@ class QToolBar(QtWidgets.QToolBar):
         super(QToolBar, self).__init__(parent)
 
         for key in order:
-            button = QButton(QtGui.QIcon(icons[key]), key, slot)
-            self.addWidget(button)
-            if key is 'EMPTYPULSE':
+            if key is 'SEPARATOR':
                 self.addSeparator()
+            else:
+                button = QButton(QtGui.QIcon(icons[key]), key, slot)
+                self.addWidget(button)
 
 
 class QButton(QtWidgets.QPushButton):
