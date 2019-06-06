@@ -27,7 +27,7 @@ import xml.etree.ElementTree as ET
 
 from gui.settings import workspace
 from gui.logs import logger
-from gui.parser import parseXML, writeXML
+from gui.parser import writeXML #, parseXML
 
 
 # Sequence Element
@@ -40,7 +40,7 @@ class Element(object):
         if xml is not None:
             self.xml = xml
         else:
-            self.xml = self.newItem('PARAMETERS', attr=self.attr)
+            self.xml = self.newItem('Parameters', attr=self.attr)
 
         # Classify all entries.
         for element in [self.xml] + self.xml.findall('.//'):
@@ -914,3 +914,12 @@ def revolverPhantom():
 #    plt.imshow(phantom[:,:,0])
 
     return phantom
+
+def parseXML(fname):
+    
+    try:
+        tree = ET.parse(fname)
+    except:
+        raise ValueError('Failed to read XML file %s.' %  os.path.split(fname)[1])
+
+    return tree.getroot()
